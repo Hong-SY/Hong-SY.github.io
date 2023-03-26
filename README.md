@@ -1,1 +1,0 @@
-# Seokyoon.github.io
