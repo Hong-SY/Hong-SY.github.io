@@ -1,29 +1,65 @@
 ---
 layout: post
 title: 기술통계학과 추론통계학
-date: 2023-04-02 19:20:23 +0900
+date: 2023-04-02 12:00:00 +0900
 category: Statistics
 ---
+
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+td {
+    text-align: center;
+}
+
+</style>
+
+- [기술통계학](#기술통계학)
+  - [일변량통계 (Univariate statistics)](#일변량통계-univariate-statistics)
+  - [중심경향성 측도](#중심경향성-측도)
+      - [평균 (Average, Mean)](#평균-average-mean)
+      - [중위수 (median)](#중위수-median)
+      - [최빈값 (mode)](#최빈값-mode)
+  - [산포 측도](#산포-측도)
+    - [평균 기반 산포 측도](#평균-기반-산포-측도)
+      - [범위 (Range)](#범위-range)
+      - [분산 (Variance)](#분산-variance)
+      - [표준편차 (Standard Diviation)](#표준편차-standard-diviation)
+      - [변동계수 (CV, coefficient variation)](#변동계수-cv-coefficient-variation)
+    - [중위수 기반 산포 측도](#중위수-기반-산포-측도)
+      - [사분위범위 (IQR, InterQuartile Range)](#사분위범위-iqr-interquartile-range)
+      - [사분위 산포계수 (Quartile Coefficient of Dispersion)](#사분위-산포계수-quartile-coefficient-of-dispersion)
+  - [데이터 요약하기](#데이터-요약하기)
+    - [다섯수치 요약 (다섯 수치 요약, 5-Number Summary)](#다섯수치-요약-다섯-수치-요약-5-number-summary)
+    - [히스토그램 (Histogram)](#히스토그램-histogram)
+    - [핵밀도추정 (KDE, Kernel Density Estimation)](#핵밀도추정-kde-kernel-density-estimation)
+    - [분포함수](#분포함수)
+      - [누적분포함수 (CDF, Cumulative Distribution Function)](#누적분포함수-cdf-cumulative-distribution-function)
+      - [경험적 누적분포함수 (ECDF, Empirical Cumulative Distribution Function)](#경험적-누적분포함수-ecdf-empirical-cumulative-distribution-function)
+      - [일반적인 분포](#일반적인-분포)
 
 # 기술통계학
 기술통계학은 작업 중인 데이터를 설명하거나 요약하는데에 사용된다.
 ## 일변량통계 (Univariate statistics)
 > 하나의 변수로 통계량을 계산한다. (속력, 거리)의 데이터쌍이 있다면 우리는 각각 평균 속력, 평균 거리 통계량을 계산할 수 있다.
+
 ## 중심경향성 측도
 > 데이터 분포의 중심(center)를 설명한다.
 > mean, median, mode(최빈값) 등을 일반적으로 사용한다.
-This is code
-### 평균 (Average, Mean)
+#### 평균 (Average, Mean)
 > 특이값에 매우 민감하다. 
 > ```
 > Mean(1,2,3,4,5,6,7,8,90) = (1+2+3+4+5+6+7+8+90)/9 = 14
 > ```
-### 중위수 (median)
+#### 중위수 (median)
 > 특이값에 강건(robust)하다
 > ```
 > Median(1,2,3,4,5,6,7,8,90) = 5
 > ```
-## #최빈값 (mode)
+#### 최빈값 (mode)
 > 가장 많이 관측된 데이터
 > * 최빈값이 1개일 경우 : 단봉분포(unimodal distribution)
 > * 최빈값이 2개일 경우 : 이봉분포(bimodal distribution)
@@ -33,3 +69,133 @@ This is code
 
 연속 데이터를 설명할 때는 주로 평균, 중위수를 중심경향성 측도로 사용한다.
 범주형 데이터를 설명할 때는 주로 최빈값을 사용한다.
+
+## 산포 측도
+> 값들이 중심 주위에 어떻게 흩어져 있는지, 얼마나 떨어져 있는지를 설명한다.
+### 평균 기반 산포 측도
+#### 범위 (Range)
+> 가장 작은 값과 가장 큰 값의 거리(distance)
+> 데이터의 상계(upper bound)와 하계(lower bound)를 알려 주지만 <b>특이값에 약하다</b>.
+#### 분산 (Variance)
+> 분산은 $$\sigma^2$$로 표시하고 표본 분산은 $$s^2$$룰 사용한다.
+> 전체 모집단의 데이터를 모두 조사하는 것은 어렵기 때문에 표본분산을 사용한다.
+> 
+> $$s^2=\frac{\Sigma_{i=1}^n(x_i-\bar{x}^2)}{n-1}$$
+> 
+> 표본분산이 모분산(population variance)의 비편향추정량(unbiased estimator)이 되도록 표본 평균을 사용하여 n-1로 나누어준다(Bessel's correction).
+> 분산은 +와 -가 상쇄되는 것을 막기 위해 제곱하여 사용하는데, 따라서 단위가 제곱이 되어 (ex:$$m$$사용시 $$\\m^2$$)의미를 상실하기 때문에 표준편차를 주로 사용한다.
+#### 표준편차 (Standard Diviation)
+> 표준편차가 작다 : 값들이 평균 가까이에 있다.
+> 표준편차가 크다 : 값들이 넓게 퍼져 있다.
+> 표준편차를 사용하면 본래의 단위에 대한 통계량을 얻는다.
+#### 변동계수 (CV, coefficient variation)
+> 어떤 데이터의 산포 수준을 다른 데이터의 산포 수준과 비교하기 위해서는 두 데이터의 단위를 통일해야 한다.
+> 변동계수(CV)는 표준편차를 평균으로 나눈 값이다.
+>
+> $$변동계수(CV)=\frac{s}{\bar{x}}$$
+>
+> 단위가 없기 때문에 다른 자산의 변동성(volatility)을 비교할 수 있다.
+### 중위수 기반 산포 측도
+#### 사분위범위 (IQR, InterQuartile Range)
+> Median은 제50 백분위수(50th percentile) 또는 제2 사분위수(2nd quartile($$Q_2$$))이다.
+> Percentile과 Quartile은 모두 분위수(quantile)이다.
+> Qualtile은 4개의 데이터(25%, 50%, 75%, 100%)로 나눈다.
+> Quantile은 데이터를 깔끔하게 구분하고 각 분위에 있는 데이터의 양을 알 수 있으므로 데이터의 산포를 정량화하는데 도움이 되는 적절한 통계량 후보 중의 하나이다.
+> 데이터 산포에 관한 일반적인 측도는 IQR이다.
+>
+> $$사분위범위(IQR)=Q_3-Q_1$$
+>
+> IQR은 Median을 중심으로 산포한 데이터를 알려주고 분포의 가운데 50%에 포함된 데이터를 정량화한다.
+> 데이터의 특이값을 확인할 때 유용하다.
+> IQR을 사용해 단위 없는 산포 측도를 계산할 수 있다.
+#### 사분위 산포계수 (Quartile Coefficient of Dispersion)
+> 중심 경향성 측도로 Mean을 사용할 때처럼 Median을 사용할 때에는 QCD를 사용한다.
+> QCD는 준사분위범위(Semi-quartile range, IQR의 반)을 1st quartile과 3rd quartile의 평균인 중간경첩(midhinge)로 나눈 값이다.
+>
+> $$사분위 산포계수(QCD)=frac{frac{Q_3-Q_1}{2}}{frac{Q_1+Q_3}{2}}=frac{Q_3-Q_1}{Q_1+Q_3}$$
+>
+
+## 데이터 요약하기
+### 다섯수치 요약 (다섯 수치 요약, 5-Number Summary)
+> 데이터를 요약한 5개의 기술 통계량
+>
+> <div align="center">
+>  <table class="center" width="30%">
+>  <tr>
+>      <th width="30%" align="center">Quartile</th>
+>      <th width="30%" align="center">Statistic</th>
+>      <th width="40%" align="center">Percentile</th>
+>  </tr>
+>  <tr>
+>      <td>$$Q_0$$</td>
+>      <td>최소값</td>
+>      <td>1st percentile</td>
+>  </tr>
+>  <tr>
+>      <td>$$Q_1$$</td>
+>      <td>N/A</td>
+>      <td>2nd percentile</td>
+>  </tr>
+>  <tr>
+>      <td>$$Q_2$$</td>
+>      <td>중위수</td>
+>      <td>3rd percentile</td>
+>  </tr>
+>  <tr>
+>      <td>$$Q_3$$</td>
+>      <td>N/A</td>
+>      <td>4th percentile</td>
+>  </tr>
+>  <tr>
+>      <td>$$Q_4$$</td>
+>      <td>최대값</td>
+>      <td>5th percentile</td>
+>  </tr>
+>  </table>
+> </div>
+>
+> <b style="color:blue;">상자 그림(box plot) 또는 상자수염그림(box and whisker plot)</b>
+> 5-number summary를 시각적으로 표현한 그림이다.
+> <p align="center">
+> <img src="/public/img/2023-04-02 box-plot.png"  width="40%">
+> </p>
+> 상자 그림은 분포를 이해하는 데 도움이 되지만 각 Quartile 안에 데이터가 어떻게 분포되어 있는지 알 수 없다.
+### 히스토그램 (Histogram)
+> 이산 변수(discrete variable)에 대한 히스토그램은 데이터의 분포를 알 수 있다.
+> 데이터의 구간(bin, bucket)을 잘 정의하여야 한다.
+> <p align="center">
+> <img src="/public/img/2023-04-02 histogram.png"  width="60%">
+> </p>
+### 핵밀도추정 (KDE, Kernel Density Estimation)
+> 연속 변수(continuous variable)에 대한 KDE는 데이터의 분포를 알 수 있다.
+> <p align="center">
+> <img src="/public/img/2023-04-02 kernel-density-estimate.png"  width="60%">
+> </p>
+> 
+> KDE는 데이터의 구간을 나누지 않고 분포의 확률밀도함수(PDF, probability density function) 추정값인 Smooth curve를 그린다.
+> PDF의 값이 높다는 것은 더 높은 가능도(likelihood)을 나타낸다.
+> 분포의 한 쪽으로 긴 꼬리가 만들어지면 중심의 평균측도가 해당 방향으로 이동한다.
+> 분포가 얼마나 비대칭인지 나타내는 정도를 <b>왜도(skewness)</b>라고 한다.
+> 왼쪽(음의방향)으로 치우칠 시 left(negative) skewed distribution,
+> 오른쪽(양의방향)으로 치우칠 시 right(positive) skewed distribution 라고 한다.
+> 
+### 분포함수
+데이터의 각 열은 확률변수(random variable)이다.
+#### 누적분포함수 (CDF, Cumulative Distribution Function)
+> CDF는 PDF의 적분이다.
+#### 경험적 누적분포함수 (ECDF, Empirical Cumulative Distribution Function)
+> 표본에서의 CDF 추정값이다.
+> 데이터를 이용해서 구한 CDF가 이에 해당한다.
+#### 일반적인 분포
+> * 가우스 분포(gaussian distribution)
+> * 정규분포(normal distribution)
+> * 포아송 분포(poisson distribution)
+> * 지수분포(exponential distribution)
+> * 균등분포(uniform distribution)
+> * 베르누이 분포(Bernoulli distribution)
+> * 이항분포(binomial distribution)
+이산분포는 PDF대신 확률질량함수(PMF, Probability Mass Function)을 사용한다.
+
+<br><br><br><br><br>
+출처 : Pandas를 이용한 데이터 분석 실습 2/e (스테파니 몰린 지음. 장기식,김경환,노용환 옮김)
+http://www.acornpub.co.kr/book/data-analysis-pandas
