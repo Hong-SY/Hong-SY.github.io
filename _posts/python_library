@@ -1,0 +1,93 @@
+---
+layout: post
+title: 파이썬 함수 모음
+date: 2023-04-09 20:00:00 +0900
+category: python
+---
+
+- [pandas](#pandas)
+- [numpy](#numpy)
+- [statistics](#statistics)
+- [math](#math)
+- [collections](#collections)
+- [ipython](#ipython)
+
+
+## pandas
+https://pandas.pydata.org/docs/reference/index.html
+``` python
+import pandas as pd
+```
+
+
+## numpy
+https://numpy.org/doc/stable/reference/index.html#reference
+``` python
+import numpy as np
+
+# 공분산 (Covariance)
+np.cov(A,B)
+
+# Data 읽기
+np.genfromtxt(
+    'data/example_data.csv', delimiter=';', 
+    names=True, dtype=None, encoding='UTF'
+)
+> array([('2018-10-13 11:10:23.560', '262km NW of Ozernovskiy, Russia', 'mww', 6.7, 'green', 1),
+> dtype=[('time', '<U23'), ('place', '<U37'), ('magType', '<U3'), ('mag', '<f8'), ('alert', '<U5'), ('tsunami', '<i8')])
+
+# 배열 차원 (shape)
+data.shape
+
+# Data type
+data.dtype
+```
+
+## statistics
+``` python
+import statistics
+
+# 평균 (mean, average)
+statistics.mean()
+# 중위수 (median)
+statistics.median()
+# 최빈값 (mode)
+statistics.mode()
+# 표본분상 (variance)
+statistics.variance()
+# 표본 표준편차 (standard deviation)
+statistics.stdev()
+# 변동계수 (Coefficient of variation)
+statistics.stdev()/statistics.mean()
+```
+
+## math
+``` python
+import math
+
+# 올림 (ceiling)
+math.ceil()
+# 내림 (floor)
+math.floor()
+```
+
+## collections
+``` python
+import collections
+
+# --Counter--
+# 출현 횟수 count
+collections.Counter(series)
+# 출현 횟수로 sort
+colelctions.Counter(series).most_common()
+# 최빈값 구하기
+colelctions.Counter(series).most_common()[0][0]
+```
+
+
+## ipython
+https://ipython.readthedocs.io/en/stable/
+``` python
+# 실행시간 측정 (execution time)
+%%timeit
+```

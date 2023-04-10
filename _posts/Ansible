@@ -1,0 +1,241 @@
+---
+layout: post
+title: Ansible 명령어 사용법
+date: 2023-04-10 20:00:00 +0900
+category: ansible, playbook
+---
+
+- [Ansible 명령어 사용법 모음](#ansible-명령어-사용법-모음)
+  - [변수 (Variable)](#변수-variable)
+  - [Root 권한 (root authority, sudo)](#root-권한-root-authority-sudo)
+  - [오류 무시 (ignore errors)](#오류-무시-ignore-errors)
+  - [실행 태그 추가 (Add tag)](#실행-태그-추가-add-tag)
+  - [Ansible 변수 확인 (Ansible facts)](#ansible-변수-확인-ansible-facts)
+  - [조건문 (When)](#조건문-when)
+  - [HTTP 다운로드 (HTTP download)](#http-다운로드-http-download)
+  - [쉘 스크립트 실행 (Execute shell script)](#쉘-스크립트-실행-execute-shell-script)
+    - [매개변수 전달 (Passing parameter)](#매개변수-전달-passing-parameter)
+  - [파일 (File)](#파일-file)
+    - [폴더 생성 (Create directory)](#폴더-생성-create-directory)
+    - [파일 생성 (Create file)](#파일-생성-create-file)
+    - [파일 생성 후 내용 추가 (Create file with contents)](#파일-생성-후-내용-추가-create-file-with-contents)
+    - [파일 복사 (Copy file)](#파일-복사-copy-file)
+    - [파일 삭제 (Delete file)](#파일-삭제-delete-file)
+    - [링크 추가 (Create link)](#링크-추가-create-link)
+    - [압축 해제 (Unarchive)](#압축-해제-unarchive)
+    - [파일 상태 (File status, stat)](#파일-상태-file-status-stat)
+  - [Git](#git)
+
+
+# Ansible 명령어 사용법 모음
+## 변수 (Variable)
+``` yml
+# variable
+vars:
+    var_name: "global variable"
+    list_var:
+        - A
+        - B
+        - C
+    dict_var:
+        key_A : "val A"
+        key_B : "val B"
+    boolan_var: "yes"
+
+group_name:
+      hosts:
+        group-host[1:10]:
+        another-host:
+            var_name: "host variable"
+      vars:
+        id: "admin"
+        var_name: "group variable"
+
+# 실행 환경변수 설정 (environment variable)
+environment:
+    environment_variable: "environment_variable"
+```
+
+## Root 권한 (root authority, sudo)
+``` yml
+become: true|yes|on
+```
+
+## 오류 무시 (ignore errors)
+``` yml
+ignore_errors: true|yes|on
+```
+
+## 실행 태그 추가 (Add tag)
+``` yml
+tags:
+    - stop
+```
+
+## Ansible 변수 확인 (Ansible facts)
+``` yml
+- name: ansible facts
+    ansible.buildtin.debug:
+        var: ansible_facts
+        
+- name: filtering with snasible facts
+    ansible.buildtin.command: /sbin/shutdown -t now
+    when: ansible_facts['os_family'] == "Debian"
+```
+
+## 조건문 (When)
+``` yml
+- name: copy when
+    copy: 
+        src: ~/source_file.txt
+        dest: ~/dest_path/
+        mode: 0755
+    when: src_name.find('target_host') != -1
+```
+
+
+## HTTP 다운로드 (HTTP download)
+``` yml
+- name: download from http server
+    get_url:
+        url: https://target_server_api
+        dest: /download_folder/
+    become: true
+    become_method: sudo
+    # Proxy 설정이 필요할 시
+    environment:  
+        https_proxy: http://proxy_url:proxy_port
+```
+## 쉘 스크립트 실행 (Execute shell script)
+``` yml
+- name: execute shell script
+    shell: bash[sh,source] /download_folder/file_name.sh
+    become: true
+    become_mathod: sudo
+```
+### 매개변수 전달 (Passing parameter)
+``` yml
+- name: passing parameter
+    shell: bash[sh,source] /download_folder/file_name.sh
+    args:
+        stdin: "A"
+    become: true
+    become_mathod: sudo
+```
+## 파일 (File)
+### 폴더 생성 (Create directory)
+``` yml
+- name: create directory
+    file:
+        path: ~/directory_name
+        state: directory
+
+- name: create scripts dir directory
+    file: path=~/directory_name state=directory mode=0755 owner=www group=www recurse=yes
+```
+### 파일 생성 (Create file)
+``` yml
+- name: create file
+    file:
+        path: ~/new_file.txt
+        state: touch
+        # 권한 설정 (authority)
+        mode: 0755
+        # owner 설정
+        owener: "user"
+        # group 설정
+        group: "user_group"
+        # 하위 폴더 및 파일에도 적용
+        recurse: yes
+    become: yes
+```
+### 파일 생성 후 내용 추가 (Create file with contents)
+``` yml
+- name: create file with contents
+    lineinfile:
+        path: ~/new_file.txt
+        line: "Init file contents"
+```
+### 파일 복사 (Copy file)
+``` yml
+# 원격으로 파일 복사 (Copy file to remote)
+- name: copy file
+    copy: 
+        src: ~/source_file.txt
+        dest: ~/dest_path/
+
+# 원격에서 파일 복사 (Copy file from remote)
+- name: copy file from remote
+    copy: 
+        src: ~/source_file.txt
+        dest: ~/dest_path/
+    remote_src: yes
+
+# 여러 파일 복사 (Colpy list of files)
+- name: copy list of files
+    copy:  
+        src: "{{ item }}"  
+        dest: "~dest_path/{{ item }}"  
+    with_items: 
+        - file_A
+        - file_B
+        - file_C
+```
+
+### 파일 삭제 (Delete file)
+``` yml
+- name: copy clean script specific
+    file:
+        path: ~/target_file.txt
+        state: absent
+```
+
+### 링크 추가 (Create link)
+``` yml
+- name: copy clean script specific
+    file:
+        src: ~/source_file.txt
+        dest: ~/dest_link
+        state: link
+        owner: "user"
+        group: "user_group"
+    become: yes
+```
+
+### 압축 해제 (Unarchive)
+``` yml
+- name: unarchive file 
+  unarchive:
+    src: "target.tar.gz"
+    dest: "~/target_folder"
+    remote_src: True
+  become: True
+```
+
+### 파일 상태 (File status, stat)
+``` yml
+# File의 상태를 저장
+- name: save file status
+    stat:  
+        path: "/home/user/file.txt"
+    # 변수에 파일 상태 저장
+    register: stat_variable
+
+# File size가 0일 때 다운로드
+- name: download file.txt
+  get_url:  
+    url: "http://file.txt"  
+  dest: ~/dest_folder
+    mode: '0660'
+  when: "stat_variable.stat.size = 0 | int"
+```
+
+## Git
+```yml
+- name: Example clone of a single branch
+  ansible.builtin.git:
+    repo: https://github.com/git-repository.git
+    dest: ~/target_directory
+    single_branch: yes
+    version: master
+```
